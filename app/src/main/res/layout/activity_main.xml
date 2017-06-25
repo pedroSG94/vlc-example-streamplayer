@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pedro.vlctestapp.MainActivity"
+    >
+
+  <SurfaceView
+      android:id="@+id/surfaceView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <EditText
+      android:id="@+id/et_endpoint"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:layout_margin="20dp"
+      android:hint="@string/yourendpoint"
+      android:textColor="@color/appColor"
+      android:textColorHint="@color/appColor"
+      android:inputType="textUri"
+      android:gravity="center"
+      />
+
+  <Button
+      android:id="@+id/b_start_stop"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/start_player"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+      android:layout_margin="20dp"
+      />
+
+</RelativeLayout>
