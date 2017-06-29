@@ -3,13 +3,10 @@ package com.pedro.vlc;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
-import java.util.Collections;
-import java.util.List;
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -35,26 +32,26 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
   public VlcVideoLibrary(Context context, VlcListener vlcListener, SurfaceView surfaceView) {
     this.vlcListener = vlcListener;
     this.surfaceView = surfaceView;
-    vlcInstance = new LibVLC(context, new VlcOptions().get());
+    vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, TextureView textureView) {
     this.vlcListener = vlcListener;
     this.textureView = textureView;
-    vlcInstance = new LibVLC(context, new VlcOptions().get());
+    vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, SurfaceTexture surfaceTexture) {
     this.vlcListener = vlcListener;
     this.surfaceTexture = surfaceTexture;
-    vlcInstance = new LibVLC(context, new VlcOptions().get());
+    vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface) {
     this.vlcListener = vlcListener;
     this.surface = surface;
     surfaceHolder = null;
-    vlcInstance = new LibVLC(context, new VlcOptions().get());
+    vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface,
@@ -62,7 +59,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     this.vlcListener = vlcListener;
     this.surface = surface;
     this.surfaceHolder = surfaceHolder;
-    vlcInstance = new LibVLC(context, new VlcOptions().get());
+    vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
   }
 
   public boolean isPlaying() {
@@ -75,7 +72,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
       public void run() {
         if (!playing) {
           playing = true;
-          setMedia(new Media(vlcInstance, Uri.parse(endPoint)), Collections.<String>emptyList());
+          setMedia(new Media(vlcInstance, Uri.parse(endPoint)));
         }
       }
     }).start();
@@ -95,10 +92,14 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     }).start();
   }
 
-  private void setMedia(final Media media, List<String> options) {
-    for (String opt : options) {
-      media.addOption(opt);
-    }
+  private void setMedia(Media media) {
+    //delay = network buffer + file buffer
+    //media.addOption(":network-caching=" + Constants.BUFFER);
+    //media.addOption(":file-caching=" + Constants.BUFFER);
+    //media.addOption(":clock-jitter=0");
+    //media.addOption(":clock-synchro=0");
+    //media.addOption(":codec=all");
+
     player = new MediaPlayer(vlcInstance);
     player.setMedia(media);
     player.setEventListener(this);
@@ -124,7 +125,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
   @Override
   public void onEvent(MediaPlayer.Event event) {
     switch (event.type) {
-      case MediaPlayer.Event.Playing:
+      case MediaPlayer.Event.EndReached:
         vlcListener.onComplete();
         break;
       case MediaPlayer.Event.EncounteredError:

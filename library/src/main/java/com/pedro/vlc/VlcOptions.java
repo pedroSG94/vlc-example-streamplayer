@@ -1,47 +1,30 @@
 package com.pedro.vlc;
 
-import android.util.Log;
-import org.videolan.libvlc.util.VLCUtil;
 import java.util.ArrayList;
-import java.util.List;
+import org.videolan.libvlc.util.VLCUtil;
 
 /**
  * Created by pedro on 25/06/17.
  */
 public class VlcOptions {
 
-  private final String TAG = "VlcOptions";
-
-  private int deblocking = -1;
-  private boolean enableFrameSkip = false;
-  private boolean enableTimeStretchingAudio = false;
-  private int networkCaching = 0;
   private boolean verboseMode = BuildConfig.DEBUG;
-  private List<String> extraArgs = null;
 
-  public ArrayList<String> get() {
-    ArrayList<String> options = new ArrayList<>(16);
-
-    options.add(enableTimeStretchingAudio ? "--audio-time-stretch" : "--no-audio-time-stretch");
+  public ArrayList<String> getDefaultOptions() {
+    ArrayList<String> options = new ArrayList<>();
+    options.add("--no-audio-time-stretch");
     options.add("--avcodec-skiploopfilter");
-    options.add(String.valueOf(getDeblocking(deblocking)));
+    options.add(String.valueOf(getDeblocking(-1)));
     options.add("--avcodec-skip-frame");
-    options.add(enableFrameSkip ? "2" : "0");
+    options.add("0");
     options.add("--avcodec-skip-idct");
-    options.add(enableFrameSkip ? "2" : "0");
+    options.add("0");
     options.add("--audio-resampler");
     options.add(getResampler());
-
-    if (networkCaching > 0) {
-      options.add("--network-caching=" + Math.min(60000, networkCaching));
-    }
-
-    final List<String> extra = extraArgs;
-    if (extra != null) {
-      options.addAll(extra);
-    }
-
     options.add(verboseMode ? "-vv" : "-v");
+    //delay = network buffer + file buffer
+    //options.add(":file-caching=" + Constants.BUFFER);
+    //options.add(":network-caching=" + Constants.BUFFER);
     return options;
   }
 
@@ -49,37 +32,34 @@ public class VlcOptions {
    The below functions are borrowed from the official VLC app:
    */
   private int getDeblocking(int deblocking) {
-    int ret = deblocking;
     if (deblocking < 0) {
-            /*
-              Set some reasonable deblocking defaults:
-
-              Skip all (4) for armv6 and MIPS by default
-              Skip non-ref (1) for all armv7 more than 1.2 Ghz and more than 2 cores
-              Skip non-key (3) for all devices that don't meet anything above
-             */
-      VLCUtil.MachineSpecs m = VLCUtil.getMachineSpecs();
-      if (m == null) {
-        return ret;
-      }
-      if ((m.hasArmV6 && !(m.hasArmV7)) || m.hasMips) {
-        ret = 4;
-      } else if (m.frequency >= 1200 && m.processors > 2) {
-        ret = 1;
-      } else if (m.bogoMIPS >= 1200 && m.processors > 2) {
-        ret = 1;
-        Log.d(TAG, "Used bogoMIPS due to lack of frequency info");
+      /*
+       Set some reasonable deblocking defaults:
+       Skip all (4) for armv6 and MIPS by default
+       Skip non-ref (1) for all armv7 more than 1.2 Ghz and more than 2 cores
+       Skip non-key (3) for all devices that don't meet anything above
+       */
+      VLCUtil.MachineSpecs machineSpecs = VLCUtil.getMachineSpecs();
+      if (machineSpecs == null) {
+        return deblocking;
+      } else if ((machineSpecs.hasArmV6 && !(machineSpecs.hasArmV7)) || machineSpecs.hasMips) {
+        return 4;
+      } else if (machineSpecs.frequency >= 1200 && machineSpecs.processors > 2) {
+        return 1;
+      } else if (machineSpecs.bogoMIPS >= 1200 && machineSpecs.processors > 2) {
+        return 1;
       } else {
-        ret = 3;
+        return 3;
       }
-    } else if (deblocking > 4) { // sanity check
-      ret = 3;
+    } else if (deblocking > 4) {
+      return 3;
+    } else {
+      return deblocking;
     }
-    return ret;
   }
 
   private String getResampler() {
-    final VLCUtil.MachineSpecs m = VLCUtil.getMachineSpecs();
-    return (m == null || m.processors > 2) ? "soxr" : "ugly";
+    VLCUtil.MachineSpecs machineSpecs = VLCUtil.getMachineSpecs();
+    return (machineSpecs == null || machineSpecs.processors > 2) ? "soxr" : "ugly";
   }
 }
