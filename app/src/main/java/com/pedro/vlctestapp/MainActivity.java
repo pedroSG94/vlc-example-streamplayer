@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements VlcListener, View
   @Override
   public void onClick(View view) {
     if (!vlcVideoLibrary.isPlaying()) {
+      etEndpoint.setText("rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
       vlcVideoLibrary.play(etEndpoint.getText().toString());
       bStartStop.setText(getString(R.string.stop_player));
     } else {

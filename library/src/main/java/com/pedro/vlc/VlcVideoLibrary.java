@@ -125,7 +125,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
   @Override
   public void onEvent(MediaPlayer.Event event) {
     switch (event.type) {
-      case MediaPlayer.Event.EndReached:
+      case MediaPlayer.Event.Playing:
         vlcListener.onComplete();
         break;
       case MediaPlayer.Event.EncounteredError:
