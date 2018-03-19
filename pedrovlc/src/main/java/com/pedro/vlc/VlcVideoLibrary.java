@@ -7,6 +7,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
+import java.util.ArrayList;
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -28,23 +29,27 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
   private SurfaceTexture surfaceTexture;
   private Surface surface;
   private SurfaceHolder surfaceHolder;
+  private ArrayList<String> options = new ArrayList<>();
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, SurfaceView surfaceView) {
     this.vlcListener = vlcListener;
     this.surfaceView = surfaceView;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, TextureView textureView) {
     this.vlcListener = vlcListener;
     this.textureView = textureView;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, SurfaceTexture surfaceTexture) {
     this.vlcListener = vlcListener;
     this.surfaceTexture = surfaceTexture;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface) {
@@ -52,6 +57,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     this.surface = surface;
     surfaceHolder = null;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface,
@@ -60,6 +66,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     this.surface = surface;
     this.surfaceHolder = surfaceHolder;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface, int width,
@@ -70,6 +77,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     this.height = height;
     surfaceHolder = null;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
   }
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, Surface surface,
@@ -80,6 +88,11 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     this.width = width;
     this.height = height;
     vlcInstance = new LibVLC(context, new VlcOptions().getDefaultOptions());
+    options.add(":fullscreen");
+  }
+
+  public void setOptions(ArrayList<String> options) {
+    this.options = options;
   }
 
   public boolean isPlaying() {
@@ -111,7 +124,11 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     //delay = network buffer + file buffer
     //media.addOption(":network-caching=" + Constants.BUFFER);
     //media.addOption(":file-caching=" + Constants.BUFFER);
-    media.addOption(":fullscreen");
+    if (options != null) {
+      for (String s : options) {
+        media.addOption(s);
+      }
+    }
     media.setHWDecoderEnabled(true, false);
     player = new MediaPlayer(vlcInstance);
     player.setMedia(media);

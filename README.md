@@ -1,6 +1,7 @@
 # vlc-example-streamplayer
 
 [![Release](https://jitpack.io/v/pedroSG94/vlc-example-streamplayer.svg)](https://jitpack.io/#pedroSG94/vlc-example-streamplayer)
+
 Example code how to play a stream with VLC.
 
 Use this endpoint for test:
