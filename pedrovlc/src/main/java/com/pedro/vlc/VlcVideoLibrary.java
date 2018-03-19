@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import java.util.ArrayList;
+import java.util.List;
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -29,7 +30,7 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
   private SurfaceTexture surfaceTexture;
   private Surface surface;
   private SurfaceHolder surfaceHolder;
-  private ArrayList<String> options = new ArrayList<>();
+  private List<String> options = new ArrayList<>();
 
   public VlcVideoLibrary(Context context, VlcListener vlcListener, SurfaceView surfaceView) {
     this.vlcListener = vlcListener;
@@ -91,7 +92,12 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
     options.add(":fullscreen");
   }
 
-  public void setOptions(ArrayList<String> options) {
+  /**
+   * This method should be called after constructor and before play methods.
+   *
+   * @param options seeted to VLC player.
+   */
+  public void setOptions(List<String> options) {
     this.options = options;
   }
 

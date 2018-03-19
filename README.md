@@ -20,7 +20,7 @@ allprojects {
   }
 }
 dependencies {
-  compile 'com.github.pedroSG94.vlc-example-streamplayer:pedrovlc:2.5.14'
+  compile 'com.github.pedroSG94.vlc-example-streamplayer:pedrovlc:2.5.14v3'
 }
 ```
 
@@ -33,6 +33,6 @@ allprojects {
   }
 }
 dependencies {
-  compile 'com.github.pedroSG94.vlc-example-streamplayer:libvlc:2.5.14'
+  compile 'com.github.pedroSG94.vlc-example-streamplayer:libvlc:2.5.14v3'
 }
 ```

@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.pedro.vlc.VlcListener;
 import com.pedro.vlc.VlcVideoLibrary;
+import java.util.Arrays;
 
 /**
  * Created by pedro on 25/06/17.
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements VlcListener, View
   private VlcVideoLibrary vlcVideoLibrary;
   private Button bStartStop;
   private EditText etEndpoint;
+
+  private String[] options = new String[]{":fullscreen"};
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements VlcListener, View
     bStartStop.setOnClickListener(this);
     etEndpoint = (EditText) findViewById(R.id.et_endpoint);
     vlcVideoLibrary = new VlcVideoLibrary(this, this, surfaceView);
+    vlcVideoLibrary.setOptions(Arrays.asList(options));
   }
 
   @Override
