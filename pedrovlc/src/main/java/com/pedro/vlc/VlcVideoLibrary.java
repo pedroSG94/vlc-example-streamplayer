@@ -172,6 +172,9 @@ public class VlcVideoLibrary implements MediaPlayer.EventListener {
       case MediaPlayer.Event.EncounteredError:
         vlcListener.onError();
         break;
+      case MediaPlayer.Event.Buffering:
+        vlcListener.onBuffering(event);
+        break;
       default:
         break;
     }
