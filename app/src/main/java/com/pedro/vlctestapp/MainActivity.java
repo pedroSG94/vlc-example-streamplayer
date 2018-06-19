@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.pedro.vlc.VlcListener;
 import com.pedro.vlc.VlcVideoLibrary;
 import java.util.Arrays;
+import org.videolan.libvlc.MediaPlayer;
 
 /**
  * Created by pedro on 25/06/17.
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity implements VlcListener, View
     Toast.makeText(this, "Error, make sure your endpoint is correct", Toast.LENGTH_SHORT).show();
     vlcVideoLibrary.stop();
     bStartStop.setText(getString(R.string.start_player));
+  }
+
+  @Override
+  public void onBuffering(MediaPlayer.Event event) {
+
   }
 
   @Override
